@@ -129,6 +129,7 @@ void introWindow(PongGame *myGame, font myFont){
                  myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
                  SDL_FreeSurface(myGame->displayGame.g_pSurface);
 
+
                  if(myGame->displayGame.g_pTexture){
                         //  copy a portion of the texture to the current rendering target
                         SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&IntroRect1);
@@ -172,6 +173,8 @@ void introWindow(PongGame *myGame, font myFont){
     {
             fprintf(stdout,"Failed to create surface (%s)\n",SDL_GetError());
     }
+
+    myGame->displayGame.g_pSurface=NULL;
 }
 
 /********************************************************************************************
@@ -254,7 +257,7 @@ void handleAI(PongGame *myGame){
     else if ((myGame->ball.py>(myGame->paddle2.py+PADDLE_HEIGHT/2))) // if ball below bottom part of paddle
     {
         myGame->paddle2.dy=myGame->paddle2.py;
-        myGame->paddle2.dy+=myGame->ball.py-(myGame->paddle2.py+PADDLE_HEIGHT/2);
+        myGame->paddle2.dy+=myGame->ball.py-(myGame->paddle2.py+PADDLE_HEIGHT*0.5);//
     }
     else
     {
@@ -637,12 +640,12 @@ void delay(unsigned int frameLimit){
     {
         return;
     }
-
     if (frameLimit > ticks + 16)
     {
         SDL_Delay(16);
-
-    } else {
+    }
+    else
+    {
         SDL_Delay(frameLimit - ticks);
     }
 }

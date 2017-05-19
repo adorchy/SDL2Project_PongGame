@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
         introWindow(&myGame, myFont);
     }
 
-    do {
+   while (gameIsRunning) {
             handleGameEvents(&gameIsRunning,&myGame);
             playerPaddleMove (&myGame);
             handleAI(&myGame);
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
             delay(frameLimit);
             frameLimit = SDL_GetTicks() + 16; //60 fps cap
 
-    } while (gameIsRunning);
+    }
 
         // free pointer
         destroy(&myGame);
