@@ -56,7 +56,9 @@ int initSDL(char *title, int xpos,int ypos,int width, int height,int flags,PongG
 
     myGame->displayGame.g_pWindow=NULL;
     myGame->displayGame.g_pRenderer=NULL;
-    myGame->displayGame.g_pTexture=NULL;
+    myGame->displayGame.g_pTexture1=NULL;
+    myGame->displayGame.g_pTexture2=NULL;
+    myGame->displayGame.g_pTexture3=NULL;
     myGame->displayGame.g_pSurface=NULL;
 
     //initialize SDL
@@ -115,65 +117,60 @@ OUTPUT : window with 2 textures containing text
 void introWindow(PongGame *myGame, font myFont){
 
     SDL_Color fontColor={255,255,255};
+    SDL_Rect IntroRect1; //Rectangle used to display character chain
+    IntroRect1.x=MAIN_TEXT_X;//start point (x)
+    IntroRect1.y=MAIN_TEXT_Y;// start point (y)
+    IntroRect1.w=MAIN_TEXT_W; //Width
+    IntroRect1.h=MAIN_TEXT_H; //Height
 
-    myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "WELCOME TO PONG!", fontColor);//Charge la police
-     if(myGame->displayGame.g_pSurface)
-     {
-
-                SDL_Rect IntroRect1; //Rectangle used to display character chain
-                IntroRect1.x=MAIN_TEXT_X;//start point (x)
-                IntroRect1.y=MAIN_TEXT_Y;// start point (y)
-                IntroRect1.w=MAIN_TEXT_W; //Width
-                IntroRect1.h=MAIN_TEXT_H; //Height
-
-                 myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+    if (myGame->displayGame.g_pTexture1==NULL)
+    {
+        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "WELCOME TO BREAKOUT!", fontColor);//Charge la police
+        if(myGame->displayGame.g_pSurface)
+        {
+                 myGame->displayGame.g_pTexture1 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
                  SDL_FreeSurface(myGame->displayGame.g_pSurface);
-
-
-                 if(myGame->displayGame.g_pTexture){
-                        //  copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&IntroRect1);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture);
-                 }
-                 else
-                 {
-                        fprintf(stdout,"Failed to create texture (%s)\n",SDL_GetError());
-                 }
-    }
+        }
         else
         {
             fprintf(stdout,"Failed to create surface (%s)\n",SDL_GetError());
         }
-
-    myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "Press space to start", fontColor);//load font
-     if(myGame->displayGame.g_pSurface)
-     {
-                SDL_Rect IntroRect2; //Rectangle to write character chain
-                IntroRect2.x=START_X; //start point (x)
-                IntroRect2.y=START_Y; // start point (y)
-                IntroRect2.w=START_W; //Width
-                IntroRect2.h=START_H; //Height
-
-                 myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
-                 SDL_FreeSurface(myGame->displayGame.g_pSurface);
-
-                 if(myGame->displayGame.g_pTexture)
-                 {
-                        //  copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&IntroRect2);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture);
-                        SDL_RenderPresent(myGame->displayGame.g_pRenderer);
-                 }
-                 else
-                 {
-                        fprintf(stdout,"Failed to create texture (%s)\n",SDL_GetError());
-                 }
     }
     else
     {
-            fprintf(stdout,"Failed to create surface (%s)\n",SDL_GetError());
+        //  copy a portion of the texture to the current rendering target
+        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture1,NULL,&IntroRect1);
+        //SDL_DestroyTexture(myGame->displayGame.g_pTexture1);
     }
 
+    SDL_Rect IntroRect2; //Rectangle to write character chain
+    IntroRect2.x=START_X; //start point (x)
+    IntroRect2.y=START_Y; // start point (y)
+    IntroRect2.w=START_W; //Width
+    IntroRect2.h=START_H; //Height
+
+    if (myGame->displayGame.g_pTexture2==NULL)
+    {
+        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "Press space to start", fontColor);//load font
+        if(myGame->displayGame.g_pSurface)
+        {
+             myGame->displayGame.g_pTexture2 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+             SDL_FreeSurface(myGame->displayGame.g_pSurface);
+        }
+        else
+        {
+        fprintf(stdout,"Failed to create surface (%s)\n",SDL_GetError());
+        }
+    }
+    else
+    {
+        //  copy a portion of the texture to the current rendering target
+        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture2,NULL,&IntroRect2);
+        // SDL_DestroyTexture(myGame->displayGame.g_pTexture2);
+
+    }
+
+    SDL_RenderPresent(myGame->displayGame.g_pRenderer);
     myGame->displayGame.g_pSurface=NULL;
 }
 
@@ -390,7 +387,6 @@ void renderAIScore (PongGame *myGame, font myFont){
 
         if(myGame->displayGame.g_pSurface){
 
-
                 //Rectangle used to display character chain
                 SDL_Rect playerScoreRect;
                 playerScoreRect.x=SCREEN_WIDTH/2-SCORE_W+100;//start point (x)
@@ -399,14 +395,14 @@ void renderAIScore (PongGame *myGame, font myFont){
                 playerScoreRect.h=SCORE_H; //Height
 
 
-                 myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+                 myGame->displayGame.g_pTexture1 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
                  SDL_FreeSurface(myGame->displayGame.g_pSurface);
 
 
-                 if(myGame->displayGame.g_pTexture){
+                 if(myGame->displayGame.g_pTexture1){
                         //  copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&playerScoreRect);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture);
+                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture1,NULL,&playerScoreRect);
+                        SDL_DestroyTexture(myGame->displayGame.g_pTexture1);
                  }
                  else{
                         fprintf(stdout,"Failed to create texture (%s)\n",SDL_GetError());
@@ -443,14 +439,14 @@ void renderPlayerScore (PongGame *myGame, font myFont){
                 playerScoreRect.h=SCORE_H; //Height
 
 
-                 myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+                 myGame->displayGame.g_pTexture2 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
                  SDL_FreeSurface(myGame->displayGame.g_pSurface);
 
 
-                 if(myGame->displayGame.g_pTexture){
+                 if(myGame->displayGame.g_pTexture2){
                         // copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&playerScoreRect);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture);
+                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture2,NULL,&playerScoreRect);
+                        SDL_DestroyTexture(myGame->displayGame.g_pTexture2);
                  }
                  else{
                         fprintf(stdout,"Failed to create texture (%s)\n",SDL_GetError());
@@ -598,12 +594,23 @@ void ballMovementAndScore(PongGame *myGame){
     }
 
     // if ball hit Top or Bottom
-    if (CheckCollisionBallWalls (*myGame)== Top ||
-        CheckCollisionBallWalls (*myGame)== Bottom
-        ){
+    if (CheckCollisionBallWalls (*myGame)== Top)
+    {
+        if (myGame->ball.sy<0) //prevent collision bugs
+        {
             myGame->ball.sy=-myGame->ball.sy*BOUNCE_SPEED;
+        }
+    }
 
-            }
+    // if ball hit Bottom
+    if (CheckCollisionBallWalls (*myGame)== Bottom)
+    {
+        if (myGame->ball.sy>0) //prevent collision bugs
+        {
+            myGame->ball.sy=-myGame->ball.sy*BOUNCE_SPEED;
+        }
+    }
+
     // if ball hit a racket
     if (CheckCollisionBallPaddles (*myGame)== True){
             myGame->ball.sx=-myGame->ball.sx*BOUNCE_SPEED;
@@ -676,13 +683,13 @@ void endWindow (PongGame *myGame, font myFont, int winner){
                 Window1.w=MAIN_TEXT_W; //Width
                 Window1.h=MAIN_TEXT_H; //Height
 
-                 myGame->displayGame.g_pTexture = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+                 myGame->displayGame.g_pTexture1 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
                  SDL_FreeSurface(myGame->displayGame.g_pSurface);
 
-                 if(myGame->displayGame.g_pTexture){
+                 if(myGame->displayGame.g_pTexture1){
                         //  copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture,NULL,&Window1);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture);
+                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture1,NULL,&Window1);
+                        SDL_DestroyTexture(myGame->displayGame.g_pTexture1);
                         SDL_RenderPresent(myGame->displayGame.g_pRenderer);
                  }
                  else
@@ -713,8 +720,14 @@ void destroy(PongGame *myGame){
          SDL_FreeSurface(myGame->displayGame.g_pSurface);
 
     //Destroy texture
-    if(myGame->displayGame.g_pTexture!=NULL)
-         SDL_DestroyTexture(myGame->displayGame.g_pTexture);
+    if(myGame->displayGame.g_pTexture1!=NULL)
+         SDL_DestroyTexture(myGame->displayGame.g_pTexture1);
+
+    if(myGame->displayGame.g_pTexture2!=NULL)
+         SDL_DestroyTexture(myGame->displayGame.g_pTexture2);
+
+    if(myGame->displayGame.g_pTexture3!=NULL)
+         SDL_DestroyTexture(myGame->displayGame.g_pTexture3);
 
     //Destroy window
     if(myGame->displayGame.g_pWindow!=NULL)

@@ -29,6 +29,12 @@ int main(int argc, char *argv[])
         introWindow(&myGame, myFont);
     }
 
+    if(myGame.displayGame.g_pTexture1!=NULL)
+        SDL_DestroyTexture(myGame.displayGame.g_pTexture1);
+
+    if(myGame.displayGame.g_pTexture2!=NULL)
+        SDL_DestroyTexture(myGame.displayGame.g_pTexture2);
+
    while (gameIsRunning) {
             handleGameEvents(&gameIsRunning,&myGame);
             playerPaddleMove (&myGame);
