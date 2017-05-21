@@ -665,42 +665,42 @@ OUTPUT : window with 1 texture containing the name of the winner.
 void endWindow (PongGame *myGame, font myFont, int winner){
     SDL_Color fontColor={255,255,255};
 
-    if (winner==0)
+    SDL_Rect Window1; //Rectangle used to display character chain
+    Window1.x=MAIN_TEXT_X;//start point (x)
+    Window1.y=MAIN_TEXT_Y;// start point (y)
+    Window1.w=MAIN_TEXT_W; //Width
+    Window1.h=MAIN_TEXT_H; //Height
+
+    if (myGame->displayGame.g_pTexture3==NULL)
     {
-        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "You lost!", fontColor);
-    }
-    else
-    {
-        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "You won!", fontColor);
-    }
+        if (winner==0)
+        {
+            myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "You lost!", fontColor);
+        }
+        else
+        {
+            myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "You won!", fontColor);
+        }
 
-     if(myGame->displayGame.g_pSurface)
-     {
-
-                SDL_Rect Window1; //Rectangle used to display character chain
-                Window1.x=MAIN_TEXT_X;//start point (x)
-                Window1.y=MAIN_TEXT_Y;// start point (y)
-                Window1.w=MAIN_TEXT_W; //Width
-                Window1.h=MAIN_TEXT_H; //Height
-
-                 myGame->displayGame.g_pTexture1 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
-                 SDL_FreeSurface(myGame->displayGame.g_pSurface);
-
-                 if(myGame->displayGame.g_pTexture1){
-                        //  copy a portion of the texture to the current rendering target
-                        SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture1,NULL,&Window1);
-                        SDL_DestroyTexture(myGame->displayGame.g_pTexture1);
-                        SDL_RenderPresent(myGame->displayGame.g_pRenderer);
-                 }
-                 else
-                 {
-                        fprintf(stdout,"Failed to create texture (%s)\n",SDL_GetError());
-                 }
-    }
+        if(myGame->displayGame.g_pSurface)
+         {
+                     myGame->displayGame.g_pTexture3 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
+                     SDL_FreeSurface(myGame->displayGame.g_pSurface);
+        }
         else
         {
             fprintf(stdout,"Failed to create surface (%s)\n",SDL_GetError());
         }
+    }
+
+    if(myGame->displayGame.g_pTexture3)
+    {
+            //  copy a portion of the texture to the current rendering target
+            SDL_RenderCopy(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pTexture3,NULL,&Window1);
+            SDL_RenderPresent(myGame->displayGame.g_pRenderer);
+    }
+
+
 }
 
 /********************************************************************
