@@ -125,7 +125,7 @@ void introWindow(PongGame *myGame, font myFont){
 
     if (myGame->displayGame.g_pTexture1==NULL)
     {
-        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "WELCOME TO BREAKOUT!", fontColor);//Charge la police
+        myGame->displayGame.g_pSurface=TTF_RenderText_Blended(myFont.g_font, "WELCOME TO PONG!", fontColor);//Charge la police
         if(myGame->displayGame.g_pSurface)
         {
                  myGame->displayGame.g_pTexture1 = SDL_CreateTextureFromSurface(myGame->displayGame.g_pRenderer,myGame->displayGame.g_pSurface);
