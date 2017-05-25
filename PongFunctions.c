@@ -378,7 +378,7 @@ INPUT : gameObject, fontObject
 OUTPUT : 1 texture containing AI's score
 *********************************************************************/
 void renderAIScore (PongGame *myGame, font myFont){
-        char AIScoreArr [0];
+        char AIScoreArr [2];
         sprintf (AIScoreArr, "%i", myGame->score.AI);
         //fprintf(stdout,"score AI:%c%c\n", AIScoreArr[0],AIScoreArr[1]);
         SDL_Color fontColor={255,255,255};
@@ -421,7 +421,7 @@ OUTPUT : 1 texture containing player's score
 *********************************************************************/
 void renderPlayerScore (PongGame *myGame, font myFont){
 
-        char playerScoreArr [0];
+        char playerScoreArr [2];
         sprintf (playerScoreArr, "%i", myGame->score.player);
         //fprintf(stdout,"score player:%c%c\n", playerScoreArr[0],playerScoreArr[1]);
         SDL_Color fontColor={255,255,255};
@@ -618,13 +618,25 @@ void ballMovementAndScore(PongGame *myGame){
     }
 
     //ball speed cap
-    if (myGame->ball.sx>BALL_RADIUS-2){
-            myGame->ball.sx=BALL_RADIUS-2;
-            }
+    if (myGame->ball.sx>BALL_RADIUS-3)
+    {
+        myGame->ball.sx=BALL_RADIUS-3;
+    }
 
-    if (myGame->ball.sy<-BALL_RADIUS-2){
-          myGame->ball.sy=-BALL_RADIUS-2;
-          }
+    if (myGame->ball.sy>BALL_RADIUS-3)
+    {
+        myGame->ball.sy=BALL_RADIUS-3;
+    }
+
+    if (myGame->ball.sy<(BALL_RADIUS-3)*-1)
+    {
+        myGame->ball.sy=(BALL_RADIUS-3)*-1;
+    }
+
+    if (myGame->ball.sx<(BALL_RADIUS-3)*-1)
+    {
+        myGame->ball.sx=(BALL_RADIUS-3)*-1;
+    }
 
     //ball movement
     myGame->ball.px+=myGame->ball.sx;
